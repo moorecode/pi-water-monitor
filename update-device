@@ -1,7 +1,7 @@
 #!/bin/bash
-HOST="10.0.0.14"
+HOST="10.0.0.10"
 REMOTE_USER="pi"
-REMOTE_REPO_PATH="project/pi-water-monitor"
+REMOTE_REPO_PATH="~/project/pi-water-monitor"
 UPDATE_COMMAND="git pull"
 
 ssh -t $REMOTE_USER@$HOST "cd $REMOTE_REPO_PATH; $UPDATE_COMMAND"
