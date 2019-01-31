@@ -25,9 +25,14 @@ client.connect("10.0.0.7", 1883, 60)
 
 def on_read(name, value):
     client.publish("water-monitor/"+ name + "/flow-rate", payload=value, qos=2, retain=False)
+
 water_sensor = water_sensor(
     "water-main", read_rate=5, on_read=on_read)
 water_sensor.read_loop_start()
+
+water_sensor2 = water_sensor(
+    "water-main", read_rate=5, on_read=on_read)
+water_sensor2.read_loop_start()
 
 client.loop_start()
 
@@ -35,5 +40,6 @@ while True:
     pass
 
 water_sensor.read_loop_stop()
+water_sensor2.read_loop_stop()
 client.loop_stop()
 client.disconnect()
