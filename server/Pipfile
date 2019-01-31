@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 paho-mqtt = "*"
+tinydb = "*"
+flask = "*"
 
 [dev-packages]
 

@@ -12,8 +12,6 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe("water-monitor/control/#")
 
 # The callback for when a PUBLISH message is received from the server.
-
-
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
 
@@ -26,15 +24,11 @@ client.connect("10.0.0.7", 1883, 60)
 
 
 def on_read(name, value):
-    client.publish("water-monitor/"+ name + "/flow-rate", payload=value, qos=2, retain=True)
+    client.publish("water-monitor/"+ name + "/flow-rate", payload=value, qos=2, retain=False)
 water_sensor = water_sensor(
     "water-main", read_rate=5, on_read=on_read)
 water_sensor.read_loop_start()
 
-# Blocking call that processes network traffic, dispatches callbacks and
-# handles reconnecting.
-# Other loop*() functions are available that give a threaded interface and a
-# manual interface.
 client.loop_start()
 
 while True:
@@ -42,4 +36,4 @@ while True:
 
 water_sensor.read_loop_stop()
 client.loop_stop()
-client.disconnect
+client.disconnect()

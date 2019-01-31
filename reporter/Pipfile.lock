@@ -25,7 +25,7 @@
         },
         "paho-mqtt": {
             "hashes": [
-                "sha256:e440a052b46d222e184be3be38676378722072fcd4dfd2c8f509fb861a7b0b79"
+                "sha256:26ab2733790ed045704f0e81d999fc253c80133cb3dd3af8b9bd0e9cb7316c9f"
             ],
             "index": "pypi",
             "version": "==1.4.0"

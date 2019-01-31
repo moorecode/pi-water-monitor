@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
-
+from tinydb import TinyDB, Query
+import json
 # The callback for when the client receives a CONNACK response from the server.
 
 
@@ -15,6 +16,13 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     print(msg.topic+" "+str(msg.payload))
+    flow_rates.insert(json.loads(msg.payload.decode('utf-8')))
+
+
+
+# database
+db = TinyDB('db.json')
+flow_rates = db.table('flow-rate')
 
 
 client = mqtt.Client()

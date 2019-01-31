@@ -1,0 +1,75 @@
+{% extends 'layout.html' %}
+{% set active_page = "dashboard" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="metric-1">
+        <div class="metric notification is-info has-padding-5 full-width">
+            <i class="fas fa-microchip fa-2x"></i>
+            <span class="is-uppercase has-text-weight-bold is-size-5">Devices connected</span>
+            <p class="has-text-weight-bold is-size-3">{{ range(1,10) | random }}</p>
+        </div>
+    </div>
+    <div class="metric-2">
+        <div class="metric notification is-danger has-padding-5 full-width">
+            <i class="fas fa-search fa-2x"></i>
+            <span class="is-uppercase has-text-weight-bold is-size-5">Leaks detected</span>
+            <p class="has-text-weight-bold is-size-3">{{ range(1,10) | random }}</p>
+        </div>
+    </div>
+    <div class="metric-3">
+        <div class="metric notification is-primary has-padding-5 full-width">
+            <i class="fas fa-ruler fa-2x"></i>
+            <span class="is-uppercase has-text-weight-bold is-size-5">Usage average</span>
+            <p class="has-text-weight-bold is-size-3">{{ range(1,100) | random }} <small class="is-size-7">L/day</small></p>
+        </div>
+    </div>
+    <div class="metric-4">
+        <div class="metric notification is-warning has-padding-5 full-width">
+            <i class="fas fa-file-invoice-dollar fa-2x"></i>
+            <span class="is-uppercase has-text-weight-bold is-size-5">Estimated cost</span>
+            <p class="has-text-weight-bold is-size-3">${{ range(30,80) | random }}<small class="is-size-7">/month</small></p>
+        </div>
+    </div>
+    <div class="graph-1 full-height">
+        <div class="box full-height">
+            <div id="graph-1"></div>
+        </div>
+        <script>
+            var times = {{ times | safe}};
+            var values = {{ values | safe}};
+            var trace1 = {
+                x: times,
+                y: values,
+                fill: 'tonexty',
+                fillcolor: '#e0efff',
+                type: 'scatter'
+            };
+
+            var data = [trace1];
+
+            Plotly.newPlot('graph-1', data);
+        </script>
+    </div>
+    <div class="setting-1 full-height">
+        <div class="box full-width full-height">
+            setting-1
+        </div>
+    </div>
+    <div class="setting-2 full-height">
+        <div class="box full-width full-height">
+            setting-2
+        </div>
+    </div>
+    <div class="leak-tracker full-height">
+        <div class="box full-width full-height">
+            leak-tracker
+        </div>
+    </div>
+    <div class="calendar full-height">
+        <div class="box full-width full-height">
+            calendar
+        </div>
+    </div>
+</div>
+{% endblock %}

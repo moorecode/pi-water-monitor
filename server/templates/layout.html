@@ -1,0 +1,60 @@
+{% set nav_options = [
+('/','index','Index'),
+('/dashboard','dashboard','Dashboard')
+] %}
+{% set active_page = active_page|default('index') %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Water Monitor</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href={{ url_for('static', filename='css/bulma.min.css') }}>
+    <link rel="stylesheet" href={{ url_for('static', filename='css/main.css') }}>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+        crossorigin="anonymous">
+</head>
+
+<body class="has-navbar-fixed-top">
+    <nav class="navbar is-fixed-top drop-shadow" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <p class="has-text-link has-text-mono"><i class="fas fa-tint"></i>&nbsp;pi-water-monitor</p>
+            </a>
+        </div>
+
+        <div id="nav-bar" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-medium">
+                            <span class="icon is-small">
+                                <i class="fas fa-bell"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="grid-wrapper">
+        <aside class="menu menu-padding">
+            <p class="menu-label">
+                General
+            </p>
+            <ul class="menu-list">
+                <ul class="menu-list">
+                    {% for href, id, caption in nav_options %}
+                    <li><a {% if id==active_page %} class="is-active" {% endif %} href="{{ href|e }}">{{ caption|e }}</a></li>
+                    {% endfor %}
+                </ul>
+        </aside>
+        <section class="section has-background-light">
+            {% block content %}{% endblock %}
+        </section>
+    </div>
+</body>
+
+</html>
