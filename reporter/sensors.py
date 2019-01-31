@@ -36,7 +36,8 @@ class Sensor():
         while not self._stop_loop:
             value = self._read()
             payload = dumps({"value": value,
-                             "timestamp": time.time()})
+                             "timestamp": time.time(),
+                             "name": self.name})
             self.on_read(self.name, payload)
             time.sleep(self.read_rate)
 
