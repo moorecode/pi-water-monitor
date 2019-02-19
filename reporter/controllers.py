@@ -10,6 +10,8 @@ class Controller():
         GPIO.setup(output_pin, GPIO.OUT)
 
     def set_state(self, on):
+        if type(on) is str:
+            on = True if on == "True" else False
         print("set pin state " + str(self.output_pin) + ("on" if on else "off"))
         GPIO.output(self.output_pin, GPIO.HIGH if on else GPIO.LOW)
 
