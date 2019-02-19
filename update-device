@@ -1,5 +1,5 @@
 #!/bin/bash
-HOST="10.0.0.10"
+HOST="10.0.0.12"
 REMOTE_USER="pi"
 REMOTE_REPO_PATH="~/project/pi-water-monitor"
 UPDATE_COMMAND="git pull"
