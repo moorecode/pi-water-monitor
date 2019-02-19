@@ -1,7 +1,9 @@
 #!/bin/bash
 HOST="10.0.0.12"
 REMOTE_USER="pi"
-REMOTE_REPO_PATH="~/project/pi-water-monitor"
-UPDATE_COMMAND="git pull"
+REMOTE_REPO_PATH="/home/pi/project/pi-water-monitor"
+LOCAL_REPO_PATH="/Users/Flux/ANU/COMP3710/pi-water-monitor"
+UPDATE_COMMAND="PATH=$PATH:/home/pi/.local/bin/ bash $REMOTE_REPO_PATH/reporter/run.sh"
 
-ssh -t $REMOTE_USER@$HOST "cd $REMOTE_REPO_PATH; $UPDATE_COMMAND"
+scp -r "$LOCAL_REPO_PATH/reporter" $REMOTE_USER@$HOST:$REMOTE_REPO_PATH
+ssh -t $REMOTE_USER@$HOST "$UPDATE_COMMAND"

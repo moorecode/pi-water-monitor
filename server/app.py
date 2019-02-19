@@ -45,7 +45,6 @@ def dashboard():
 
 @app.route('/settings', methods=['POST'])
 def settings():
-    print('#######################',request.form)
     return "success"
 
 @app.route('/controls', methods=['POST'])
