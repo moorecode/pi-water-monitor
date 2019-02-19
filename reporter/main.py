@@ -20,6 +20,7 @@ def on_message(client, userdata, msg):
     print(msg.topic, str(msg.payload))
     for controller in controllers:
         if controller.name in msg.topic:
+            print("controller action", controller.name)
             controller.set_state(str(msg.payload))
             break
 
