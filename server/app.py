@@ -32,20 +32,44 @@ def index():
 @app.route('/dashboard')
 def dashboard():
     records = flow_rates.all()
+    leak_threshold = status.get(where('name') == 'leak_threshold')
+    if leak_threshold:
+        leak_threshold = float(leak_threshold.get("value", 9999999))
+    else: leak_threshold = 9999999
+    water_cost_per_l = 2.60/1000 # https://www.teampoly.com.au/2018/06/15/water-prices-in-australia/ (Canberra low)
     data = {}
+    leaks = []
+    usage_sum = 0
     for record in records: # convert timestamp to strftime
-        record["timestamp"] = datetime.utcfromtimestamp(record["timestamp"]).strftime("%y-%m-%d %H:%M:%S")
-        record["plot"] = (record["value"]/record["duration"]) * 60 # L per min
-        if record["name"] in data:
-            data[record["name"]].append(record)
+        record_time = record['timestamp']
+        record['timestamp'] = datetime.utcfromtimestamp(record['timestamp']).strftime('%y-%m-%d %H:%M:%S')
+        usage_sum += record['value']
+        record['plot'] = (record['value']/record['duration']) * 60 # L per min
+        if record['plot'] > leak_threshold:
+            record_copy = record.copy()
+            record_copy['timestamp'] = datetime.utcfromtimestamp(record_time).strftime('%a %H:%M:%S')
+            record_copy['plot'] = record_copy['plot'] - leak_threshold
+            leaks.append(record_copy)
+        if record['name'] in data:
+            data[record['name']].append(record)
         else:
-            data[record["name"]] = [record]
+            data[record['name']] = [record]
     water_status = status.search(where('name') == 'water_status')
-    return render_template('dashboard.html', data=data, num_devices=len(data), water_status=water_status)
+    monthly_cost = usage_sum*water_cost_per_l*30
+    return render_template('dashboard.html', data=data, num_devices=len(data), 
+    water_status=water_status, leaks=leaks, usage_sum=usage_sum, monthly_cost=monthly_cost)
 
 @app.route('/settings', methods=['POST'])
 def settings():
-    return "success"
+    print(request.form)
+    if 'read_rate' in request.form:
+        read_rate = request.form['read_rate']
+        status.upsert({'name': 'read_rate', "value":read_rate}, where('name') == 'read_rate')
+        mqtt.publish('water-monitor/control/water-main/read_rate', read_rate)
+    if 'leak_threshold' in request.form:
+        leak_threshold = request.form['leak_threshold']
+        status.upsert({'name': 'leak_threshold', "value":leak_threshold}, where('name') == 'leak_threshold')
+    return 'success'
 
 @app.route('/controls', methods=['POST'])
 def controls():
@@ -54,7 +78,7 @@ def controls():
         water_status = water_status.get('value', 'True')
     water_status = not water_status
     status.upsert({'name':'water_status', 'value':water_status}, where('name') == 'water_status')
-    mqtt.publish("water-monitor/control/water-main/switch", water_status)
+    mqtt.publish('water-monitor/control/water-main/switch', water_status)
     return str(water_status)
 
 

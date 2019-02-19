@@ -14,14 +14,14 @@
         <div class="metric notification is-danger has-padding-5 full-width">
             <i class="fas fa-search fa-2x"></i>
             <span class="is-uppercase has-text-weight-bold is-size-5">Leaks detected</span>
-            <p class="has-text-weight-bold is-size-3">{{ range(1,10) | random }}</p>
+            <p class="has-text-weight-bold is-size-3">{{ leaks | length }}</p>
         </div>
     </div>
     <div class="metric-3">
         <div class="metric notification is-primary has-padding-5 full-width">
             <i class="fas fa-ruler fa-2x"></i>
-            <span class="is-uppercase has-text-weight-bold is-size-5">Usage average</span>
-            <p class="has-text-weight-bold is-size-3">{{ range(1,100) | random }} <small class="is-size-7">L/day</small>
+            <span class="is-uppercase has-text-weight-bold is-size-5">Usage Today</span>
+            <p class="has-text-weight-bold is-size-3">{{ usage_sum | int }} <small class="is-size-7">L/day</small>
             </p>
         </div>
     </div>
@@ -29,8 +29,8 @@
         <div class="metric notification is-warning has-padding-5 full-width">
             <i class="fas fa-file-invoice-dollar fa-2x"></i>
             <span class="is-uppercase has-text-weight-bold is-size-5">Estimated cost</span>
-            <p class="has-text-weight-bold is-size-3">${{ range(30,80) | random }}<small
-                    class="is-size-7">/month</small></p>
+            <p class="has-text-weight-bold is-size-3">${{ monthly_cost | int }}<small class="is-size-7">/month</small>
+            </p>
         </div>
     </div>
     <div class="graph-1 full-height">
@@ -54,10 +54,85 @@
                 }
             });
 
-            Plotly.newPlot('graph-1', scatter_plots);
+            var layout = {
+                title: 'Water Usage',
+                xaxis: {
+                    title: 'Time',
+                    showgrid: false,
+                    zeroline: false
+                },
+                yaxis: {
+                    title: 'L/minute',
+                    showline: false
+                }
+            };
+            console.table(scatter_plots[0])
+
+            Plotly.newPlot('graph-1', scatter_plots, layout);
         </script>
     </div>
     <div class="setting-1 full-height">
+        <div class="box full-width full-height">
+            <p class="is-size-5">Settings</p>
+            <hr>
+            <p class="is-size-7">Reporter</p>
+            <form id="flow-rate-form" action="/settings" method="post">
+                <div class="field">
+                    <div class="field has-addons">
+                        <p class="control">
+                            <input class="input" type="text" placeholder="Read rate" name="read_rate">
+                        </p>
+                        <p class="control">
+                            <a class="button is-static">
+                                seconds
+                            </a>
+                        </p>
+                    </div>
+                    <button id="flow-rate-submit" type="submit" class="button is-link">Save</button>
+                    <span class="is-size-6 success" id="read-rate-message" hidden>Saved!</span>
+                    <script>
+                        $('#flow-rate-form').submit(function () {
+                            $('#flow-rate-submit').addClass("is-loading")
+                            $(this).ajaxSubmit((res) => {
+                                $('#flow-rate-submit').removeClass("is-loading")
+                                $('#read-rate-message').show(1).delay(2000).hide('slow', () => $(this).resetForm());
+                            });
+                            return false;
+                        });
+                    </script>
+                </div>
+            </form>
+            <hr>
+            <p class="is-size-7">General</p>
+            <form id="leak-threshold-form" action="/settings" method="post">
+                <div class="field">
+                    <div class="field has-addons">
+                        <p class="control">
+                            <input class="input" type="text" placeholder="Leak threshold" name="leak_threshold">
+                        </p>
+                        <p class="control">
+                            <a class="button is-static">
+                                L/min
+                            </a>
+                        </p>
+                    </div>
+                    <button id="leak-threshold-submit" type="submit" class="button is-link">Save</button>
+                    <span class="is-size-6 success" id="leak-threshold-message" hidden>Saved!</span>
+                    <script>
+                        $('#leak-threshold-form').submit(function () {
+                            $('#leak-threshold-submit').addClass("is-loading")
+                            $(this).ajaxSubmit((res) => {
+                                $('#leak-threshold-submit').removeClass("is-loading")
+                                $('#leak-threshold-message').show(1).delay(2000).hide('slow', () => $(this).resetForm());
+                            });
+                            return false;
+                        });
+                    </script>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="setting-2 full-height">
         <div class="box full-width full-height">
             <p class="is-size-5">Controls</p>
             <hr>
@@ -74,11 +149,11 @@
                             $(this).ajaxSubmit((res) => {
                                 var s = $('#settings-1-submit')
                                 s.removeClass("is-loading")
-                                if (res === "False") {
+                                if (res === "True") {
                                     s.addClass("is-success");
                                     s.removeClass("is-danger");
                                     s.text("Turn water on");
-                                } else if (res === "True") {
+                                } else if (res === "False") {
                                     s.addClass("is-danger");
                                     s.removeClass("is-success");
                                     s.text("Turn water off");
@@ -92,42 +167,35 @@
             </form>
         </div>
     </div>
-    <div class="setting-2 full-height">
-        <div class="box full-width full-height">
-            <p class="is-size-5">Settings</p>
-            <hr>
-            <p class="is-size-7">Reporter</p>
-            <form id="settings-2-form" action="/settings" method="post">
-                <div class="field">
-                    <div class="field has-addons">
-                        <p class="control">
-                            <input class="input" type="text" placeholder="Read rate" name="read_rate">
-                        </p>
-                        <p class="control">
-                            <a class="button is-static">
-                                seconds
-                            </a>
-                        </p>
-                    </div>
-                    <button id="settings-2-submit" type="submit" class="button is-link">Save</button>
-                    <span class="is-size-6 success" id="saved-2-message" hidden>Saved!</span>
-                    <script>
-                        $('#settings-2-form').submit(function () {
-                            $('#settings-2-submit').addClass("is-loading")
-                            $(this).ajaxSubmit((res) => {
-                                $('#settings-2-submit').removeClass("is-loading")
-                                $('#saved-2-message').show(1).delay(2000).hide('slow', () => $(this).resetForm());
-                            });
-                            return false;
-                        });
-                    </script>
-                </div>
-            </form>
-        </div>
-    </div>
     <div class="leak-tracker full-height">
         <div class="box full-width full-height">
-            leak-tracker
+            <div id="leak-graph"></div>
+            <script>
+                var plots = [];
+                var leak_data = {{ leaks | safe}};
+                var leak_plot = [{
+                    x: leak_data.map(d => d.timestamp),
+                    y: leak_data.map(d => d.plot),
+                    type: 'bar',
+                    marker: {
+                        color: 'rgb(255,58,58)'
+                    }
+                }];
+                var leak_layout = {
+                    title: 'Leaks detected',
+                    xaxis: {
+                        title: 'Time of day',
+                        showgrid: false,
+                        zeroline: false
+                    },
+                    yaxis: {
+                        title: 'L/minute leaked',
+                        showline: false
+                    }
+                };
+                console.table(leak_plot)
+                Plotly.newPlot('leak-graph', leak_plot, leak_layout);
+            </script>
         </div>
     </div>
     <div class="calendar full-height">
