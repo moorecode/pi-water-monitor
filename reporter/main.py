@@ -48,13 +48,19 @@ controllers.append(controller1)
 
 client.loop_start()
 
-while True:
-    pass
+def teardown():
+    for controller in controllers:
+        controller.teardown()
 
-for controller in controllers:
-    controller.teardown()
+    water_sensor1.read_loop_stop()
+    water_sensor2.read_loop_stop()
+    client.loop_stop()
+    client.disconnect()
+try:
+    while True:
+        pass
+except KeyboardInterrupt:
+    teardown()
 
-water_sensor1.read_loop_stop()
-water_sensor2.read_loop_stop()
-client.loop_stop()
-client.disconnect()
+teardown()
+    
