@@ -12,7 +12,7 @@ class Controller():
     def set_state(self, on):
         if type(on) is str:
             on = True if on == "True" else False
-        print("set pin state " + str(self.output_pin) + ("on" if on else "off"))
+        print("set pin state " + str(self.output_pin) + " " + ("on" if on else "off") + " " + on)
         GPIO.output(self.output_pin, GPIO.HIGH if on else GPIO.LOW)
 
     def teardown(self):
