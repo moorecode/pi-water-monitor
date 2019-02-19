@@ -1,5 +1,1 @@
-__pycache__
-.vscode
-*.pyc
-settings.json
 server/db.json

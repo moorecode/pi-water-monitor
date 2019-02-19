@@ -50,7 +50,9 @@ def settings():
 
 @app.route('/controls', methods=['POST'])
 def controls():
-    water_status = status.get(where('name') == 'water_status')["value"]
+    water_status = status.get(where('name') == 'water_status')
+    if water_status:
+        water_status = water_status.get('value', 'True')
     water_status = not water_status
     status.upsert({'name':'water_status', 'value':water_status}, where('name') == 'water_status')
     print("publishing")
