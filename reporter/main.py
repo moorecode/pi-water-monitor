@@ -21,11 +21,17 @@ def on_connect(client, userdata, flags, rc):
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     print(msg.topic, str(msg.payload))
-    for controller in controllers:
-        if controller.name in msg.topic:
-            print("controller action", controller.name)
-            controller.set_state(msg.payload.decode("utf-8") )
-            break
+    if msg.topic.endswith('switch'):
+        for controller in controllers:
+            if controller.name in msg.topic:
+                print("controller action", controller.name)
+                controller.set_state(msg.payload.decode("utf-8") )
+                break
+    elif msg.topic.endswith('read_rate'):
+        for sensor in sensors:
+            if sensor.name in msg.topic:
+                print("changing sensor read rate:", sensor.name, float(msg.payload.decode("utf-8")))
+                sensor.read_rate = float(msg.payload.decode("utf-8"))
 
 
 client = mqtt.Client()
@@ -42,8 +48,10 @@ reader1 = Reader("water-main", 20)
 readers.append(reader1)
 
 water_sensor1 = water_sensor(
-    "water-main", read_rate=5, on_read=on_read, read=reader1.read)
+    "water-main", read_rate=30, on_read=on_read, read=reader1.read)
 water_sensor1.read_loop_start()
+
+sensors.append(water_sensor1)
 
 controller1 = Controller("water-main", 18)
 controllers.append(controller1)
