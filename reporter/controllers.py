@@ -10,11 +10,12 @@ class Controller():
         GPIO.setup(output_pin, GPIO.OUT)
 
     def set_state(self, on):
-        print("##########")
-        if isinstance(on, str):
-            on = True if on == "True" else False
-        print("set pin state " + str(self.output_pin) + " " + ("on" if on else "off") + " " + on)
-        GPIO.output(self.output_pin, GPIO.HIGH if on else GPIO.LOW)
+        try:
+            if isinstance(on, str):
+                on = True if on == "True" else False
+            GPIO.output(self.output_pin, GPIO.HIGH if on else GPIO.LOW)
+        except:
+            print("##Error##")
 
     def teardown(self):
-        GPIO.cleanup()
+        GPIO.cleanup(self.output_pin)

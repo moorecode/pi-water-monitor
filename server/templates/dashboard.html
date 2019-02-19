@@ -40,10 +40,9 @@
         <script>
             var plots = [];
             var data = {{ data | safe}};
-            console.table(data)
             Object.keys(data).forEach(key => {
                 const xs = data[key].map(d => d.timestamp);
-                const ys = data[key].map(d => d.value);
+                const ys = data[key].map(d => d.plot);
                 plots.push({ x: xs, y: ys, name: key });
             });
             var scatter_plots = plots.map(plot => {
@@ -54,8 +53,6 @@
                     type: 'scatter'
                 }
             });
-
-            console.table(scatter_plots)
 
             Plotly.newPlot('graph-1', scatter_plots);
         </script>
@@ -75,7 +72,6 @@
                         $('#settings-1-form').submit(function () {
                             $('#settings-1-submit').addClass("is-loading")
                             $(this).ajaxSubmit((res) => {
-                                console.log(res)
                                 var s = $('#settings-1-submit')
                                 s.removeClass("is-loading")
                                 if (res === "False") {

@@ -9,11 +9,9 @@ class Sensor():
         self.name = name
         self.read_rate = read_rate
         self.on_read = on_read
+        self._read = read
         self._thread = None
         self._stop_loop = False
-
-    def _read(self):
-        return random.randint(1, 10)
 
     def read_loop_start(self):
         if self._thread is not None:
@@ -34,15 +32,14 @@ class Sensor():
 
     def _read_loop(self):
         while not self._stop_loop:
-            value = self._read()
+            (value, duration) = self._read()
             payload = dumps({"value": value,
+                            "duration": duration,
                              "timestamp": time.time(),
                              "name": self.name})
             self.on_read(self.name, payload)
             time.sleep(self.read_rate)
 
 
-def water_sensor(name, read_rate, on_read):
-    def read_water_value(): return random.randint(1, 10)
-    def set_water_flow(on): pass
-    return Sensor(name, read_rate, on_read, read_water_value)
+def water_sensor(name, read_rate, on_read, read):
+    return Sensor(name, read_rate, on_read, read)

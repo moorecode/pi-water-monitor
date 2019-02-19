@@ -2,11 +2,12 @@ from flask import Flask, render_template, request
 from flask_mqtt import Mqtt
 from tinydb import TinyDB, Query, where
 from datetime import datetime
+import json
 
 app = Flask(__name__)
 mqtt = Mqtt(app)
 db = TinyDB('db.json')
-flow_rates=db.table('flow-rate')
+flow_rates = db.table('flow-rate')
 status=db.table('status')
 
 app.config['MQTT_BROKER_URL'] = '10.0.0.7'
@@ -20,11 +21,9 @@ def handle_connect(client, userdata, flags, rc):
     mqtt.subscribe('water-monitor/#')
 @mqtt.on_message()
 def handle_mqtt_message(client, userdata, message):
-    data = dict(
-        topic=message.topic,
-        payload=message.payload.decode()
-    )
-    print(data)
+    payload = json.loads(message.payload.decode())
+    print(payload)
+    flow_rates.insert(payload)
 
 @app.route('/')
 def index():
@@ -36,6 +35,7 @@ def dashboard():
     data = {}
     for record in records: # convert timestamp to strftime
         record["timestamp"] = datetime.utcfromtimestamp(record["timestamp"]).strftime("%y-%m-%d %H:%M:%S")
+        record["plot"] = (record["value"]/record["duration"]) * 60 # L per min
         if record["name"] in data:
             data[record["name"]].append(record)
         else:
@@ -54,7 +54,6 @@ def controls():
         water_status = water_status.get('value', 'True')
     water_status = not water_status
     status.upsert({'name':'water_status', 'value':water_status}, where('name') == 'water_status')
-    print("publishing")
     mqtt.publish("water-monitor/control/water-main/switch", water_status)
     return str(water_status)
 

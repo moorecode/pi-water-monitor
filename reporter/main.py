@@ -1,10 +1,13 @@
 from sensors import water_sensor
 from controllers import Controller
+from reader import Reader
 from time import sleep
 from paho.mqtt import client as mqtt
+import time
 
 sensors = []
 controllers = []
+readers = []
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -21,7 +24,7 @@ def on_message(client, userdata, msg):
     for controller in controllers:
         if controller.name in msg.topic:
             print("controller action", controller.name)
-            controller.set_state(str(msg.payload))
+            controller.set_state(msg.payload.decode("utf-8") )
             break
 
 
@@ -35,17 +38,16 @@ def on_read(name, value):
     client.publish("water-monitor/"+ name + "/flow-rate", payload=value, qos=2, retain=False)
     print("publish", "water-monitor/"+ name + "/flow-rate:", value)
 
+reader1 = Reader("water-main", 20)
+readers.append(reader1)
+
 water_sensor1 = water_sensor(
-    "water-main", read_rate=30, on_read=on_read)
+    "water-main", read_rate=5, on_read=on_read, read=reader1.read)
 water_sensor1.read_loop_start()
-
-
-water_sensor2 = water_sensor(
-    "water-sprinkler", read_rate=34, on_read=on_read)
-water_sensor2.read_loop_start()
 
 controller1 = Controller("water-main", 18)
 controllers.append(controller1)
+
 
 client.loop_start()
 
@@ -54,7 +56,6 @@ def teardown():
         controller.teardown()
 
     water_sensor1.read_loop_stop()
-    water_sensor2.read_loop_stop()
     client.loop_stop()
     client.disconnect()
 try:
