@@ -7,7 +7,7 @@
         <div class="metric notification is-info has-padding-5 full-width">
             <i class="fas fa-microchip fa-2x"></i>
             <span class="is-uppercase has-text-weight-bold is-size-5">Devices connected</span>
-            <p class="has-text-weight-bold is-size-3">{{ range(1,10) | random }}</p>
+            <p class="has-text-weight-bold is-size-3">{{ num_devices }}</p>
         </div>
     </div>
     <div class="metric-2">
@@ -21,14 +21,16 @@
         <div class="metric notification is-primary has-padding-5 full-width">
             <i class="fas fa-ruler fa-2x"></i>
             <span class="is-uppercase has-text-weight-bold is-size-5">Usage average</span>
-            <p class="has-text-weight-bold is-size-3">{{ range(1,100) | random }} <small class="is-size-7">L/day</small></p>
+            <p class="has-text-weight-bold is-size-3">{{ range(1,100) | random }} <small class="is-size-7">L/day</small>
+            </p>
         </div>
     </div>
     <div class="metric-4">
         <div class="metric notification is-warning has-padding-5 full-width">
             <i class="fas fa-file-invoice-dollar fa-2x"></i>
             <span class="is-uppercase has-text-weight-bold is-size-5">Estimated cost</span>
-            <p class="has-text-weight-bold is-size-3">${{ range(30,80) | random }}<small class="is-size-7">/month</small></p>
+            <p class="has-text-weight-bold is-size-3">${{ range(30,80) | random }}<small
+                    class="is-size-7">/month</small></p>
         </div>
     </div>
     <div class="graph-1 full-height">
@@ -36,29 +38,95 @@
             <div id="graph-1"></div>
         </div>
         <script>
-            var times = {{ times | safe}};
-            var values = {{ values | safe}};
-            var trace1 = {
-                x: times,
-                y: values,
-                fill: 'tonexty',
-                fillcolor: '#e0efff',
-                type: 'scatter'
-            };
+            var plots = [];
+            var data = {{ data | safe}};
+            console.table(data)
+            Object.keys(data).forEach(key => {
+                const xs = data[key].map(d => d.timestamp);
+                const ys = data[key].map(d => d.value);
+                plots.push({ x: xs, y: ys, name: key });
+            });
+            var scatter_plots = plots.map(plot => {
+                return {
+                    x: plot.x,
+                    y: plot.y,
+                    name: plot.name,
+                    type: 'scatter'
+                }
+            });
 
-            var data = [trace1];
+            console.table(scatter_plots)
 
-            Plotly.newPlot('graph-1', data);
+            Plotly.newPlot('graph-1', scatter_plots);
         </script>
     </div>
     <div class="setting-1 full-height">
         <div class="box full-width full-height">
-            setting-1
+            <p class="is-size-5">Controls</p>
+            <hr>
+            <p class="is-size-7">Reporter</p>
+            <form id="settings-1-form" action="/controls" method="post">
+                <div class="field">
+                    <button id="settings-1-submit" type="submit"
+                        class="button is-link {{ 'is-danger' if water_status else 'is-success' }}">Turn water
+                        {{ 'off' if water_status else 'on' }}</button>
+                    <span class="is-size-6 success" id="saved-message" hidden>Saved!</span>
+                    <script>
+                        $('#settings-1-form').submit(function () {
+                            $('#settings-1-submit').addClass("is-loading")
+                            $(this).ajaxSubmit((res) => {
+                                console.log(res)
+                                var s = $('#settings-1-submit')
+                                s.removeClass("is-loading")
+                                if (res === "False") {
+                                    s.addClass("is-success");
+                                    s.removeClass("is-danger");
+                                    s.text("Turn water on");
+                                } else if (res === "True") {
+                                    s.addClass("is-danger");
+                                    s.removeClass("is-success");
+                                    s.text("Turn water off");
+                                }
+                                //$('#saved-message').show(1).delay(2000).hide('slow', () => $(this).resetForm());
+                            });
+                            return false;
+                        });
+                    </script>
+                </div>
+            </form>
         </div>
     </div>
     <div class="setting-2 full-height">
         <div class="box full-width full-height">
-            setting-2
+            <p class="is-size-5">Settings</p>
+            <hr>
+            <p class="is-size-7">Reporter</p>
+            <form id="settings-2-form" action="/settings" method="post">
+                <div class="field">
+                    <div class="field has-addons">
+                        <p class="control">
+                            <input class="input" type="text" placeholder="Read rate" name="read_rate">
+                        </p>
+                        <p class="control">
+                            <a class="button is-static">
+                                seconds
+                            </a>
+                        </p>
+                    </div>
+                    <button id="settings-2-submit" type="submit" class="button is-link">Save</button>
+                    <span class="is-size-6 success" id="saved-2-message" hidden>Saved!</span>
+                    <script>
+                        $('#settings-2-form').submit(function () {
+                            $('#settings-2-submit').addClass("is-loading")
+                            $(this).ajaxSubmit((res) => {
+                                $('#settings-2-submit').removeClass("is-loading")
+                                $('#saved-2-message').show(1).delay(2000).hide('slow', () => $(this).resetForm());
+                            });
+                            return false;
+                        });
+                    </script>
+                </div>
+            </form>
         </div>
     </div>
     <div class="leak-tracker full-height">

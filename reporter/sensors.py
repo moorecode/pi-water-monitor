@@ -44,5 +44,5 @@ class Sensor():
 
 def water_sensor(name, read_rate, on_read):
     def read_water_value(): return random.randint(1, 10)
-    sensor = Sensor(name, read_rate, on_read, read_water_value)
-    return sensor
+    def set_water_flow(on): 
+    return Sensor(name, read_rate, on_read, read_water_value)

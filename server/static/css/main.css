@@ -55,3 +55,19 @@
 .setting-2 { grid-area: setting-2; align-self: stretch; place-self: center stretch; }
 .leak-tracker { grid-area: leak-tracker; align-self: stretch; place-self: center stretch; }
 .calendar { grid-area: calendar; align-self: stretch; place-self: center stretch; }
+
+/* from https://stackoverflow.com/questions/15907079/css3-transition-fade-out-effect */
+@-webkit-keyframes fadeOut {
+    0% { opacity: 1;}
+    99% { opacity: 0.01;width: 100%; height: 100%;}
+    100% { opacity: 0;width: 0; height: 0;}
+}  
+@keyframes fadeOut {
+    0% { opacity: 1;}
+    99% { opacity: 0.01;width: 100%; height: 100%;}
+    100% { opacity: 0;width: 0; height: 0;}
+}
+
+.success {
+    color: green;
+}

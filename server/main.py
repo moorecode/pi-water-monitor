@@ -39,5 +39,5 @@ client.loop_start()
 
 command = input("$ ")
 while command != "":
-    client.publish("water-monitor/control/"+command, payload=1, qos=2)
+    client.publish("water-monitor/control/"+command, payload=1, qos=2, retain=False)
     command = input("$ ")

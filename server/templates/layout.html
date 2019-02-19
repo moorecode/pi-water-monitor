@@ -13,8 +13,11 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href={{ url_for('static', filename='css/bulma.min.css') }}>
     <link rel="stylesheet" href={{ url_for('static', filename='css/main.css') }}>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-        crossorigin="anonymous">
+    <script src={{ url_for('static', filename='js/jQuery.js') }}></script>
+    <script src={{ url_for('static', filename='js/jQueryForm.js') }}></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
 </head>
 
 <body class="has-navbar-fixed-top">
@@ -47,7 +50,8 @@
             <ul class="menu-list">
                 <ul class="menu-list">
                     {% for href, id, caption in nav_options %}
-                    <li><a {% if id==active_page %} class="is-active" {% endif %} href="{{ href|e }}">{{ caption|e }}</a></li>
+                    <li><a {% if id==active_page %} class="is-active" {% endif %}
+                            href="{{ href|e }}">{{ caption|e }}</a></li>
                     {% endfor %}
                 </ul>
         </aside>

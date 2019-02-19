@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f8229fc7c3812b7cf9890b55000030df10fa414449e02901e3e9a0a7762fbd56"
+            "sha256": "03fc303c8cd7b7005b99be1e1b2bbd5c14b13d0eb7943be9733c2e34ee1ba241"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -31,6 +31,13 @@
             ],
             "index": "pypi",
             "version": "==1.0.2"
+        },
+        "flask-mqtt": {
+            "hashes": [
+                "sha256:a12e982144fe5a5b0bd3501907c84c80c1cda9c5718eb473ecbd21431fff287e"
+            ],
+            "index": "pypi",
+            "version": "==1.0.5"
         },
         "itsdangerous": {
             "hashes": [
@@ -96,6 +103,14 @@
             ],
             "index": "pypi",
             "version": "==3.12.2"
+        },
+        "typing": {
+            "hashes": [
+                "sha256:4027c5f6127a6267a435201981ba156de91ad0d1d98e9ddc2aa173453453492d",
+                "sha256:57dcf675a99b74d64dacf6fba08fb17cf7e3d5fdff53d4a30ea2a5e7e52543d4",
+                "sha256:a4c8473ce11a65999c8f59cb093e70686b6c84c98df58c1dae9b3b196089858a"
+            ],
+            "version": "==3.6.6"
         },
         "werkzeug": {
             "hashes": [
