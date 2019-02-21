@@ -1,5 +1,5 @@
 #!/bin/bash
-HOST="10.0.0.12"
+HOST="192.168.1.7"
 REMOTE_USER="pi"
 REMOTE_REPO_PATH="/home/pi/project/pi-water-monitor"
 LOCAL_REPO_PATH="/Users/Flux/ANU/COMP3710/pi-water-monitor"
