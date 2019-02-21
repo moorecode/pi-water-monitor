@@ -36,8 +36,6 @@
     width: 100%;
 }
 
-
-
 .dashboard-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -70,4 +68,8 @@
 
 .success {
     color: green;
+}
+
+.dhtmlxcalendar_material {
+    position: inherit !important;
 }

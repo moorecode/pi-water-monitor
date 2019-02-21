@@ -49,6 +49,7 @@ def dashboard():
             record_copy = record.copy()
             record_copy['timestamp'] = datetime.utcfromtimestamp(record_time).strftime('%a %H:%M:%S')
             record_copy['plot'] = record_copy['plot'] - leak_threshold
+            record_copy['cal-day'] = datetime.utcfromtimestamp(record_time).strftime('%Y-%m-%d')
             leaks.append(record_copy)
         if record['name'] in data:
             data[record['name']].append(record)
@@ -56,12 +57,12 @@ def dashboard():
             data[record['name']] = [record]
     water_status = status.search(where('name') == 'water_status')
     monthly_cost = usage_sum*water_cost_per_l*30
+    leak_days = ','.join(map(lambda l: l['cal-day'], leaks))
     return render_template('dashboard.html', data=data, num_devices=len(data), 
-    water_status=water_status, leaks=leaks, usage_sum=usage_sum, monthly_cost=monthly_cost)
+    water_status=water_status, leaks=leaks, usage_sum=usage_sum, monthly_cost=monthly_cost, leak_days=leak_days)
 
 @app.route('/settings', methods=['POST'])
 def settings():
-    print(request.form)
     if 'read_rate' in request.form:
         read_rate = request.form['read_rate']
         status.upsert({'name': 'read_rate', "value":read_rate}, where('name') == 'read_rate')

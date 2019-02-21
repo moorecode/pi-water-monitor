@@ -201,8 +201,18 @@
     </div>
     <div class="calendar full-height">
         <div class="box full-width full-height">
-            calendar
+            <div id="calendar"></div>
         </div>
+        <script>
+            var cal = new dhtmlXCalendarObject("calendar");
+            console.log("$$$$$$$", leak_data)
+            cal.hideTime();
+            cal.show();
+            cal.setDate(new Date());
+            cal.setHolidays({{ leak_days }});
+            console.log('beans', {{ leak_days }})
+            cal.setPosition(null, null)
+        </script>
     </div>
 </div>
 {% endblock %}
