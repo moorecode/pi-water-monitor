@@ -1,17 +1,15 @@
-# pi-water-monitor
-
 ![](assets/cover.png)
 
 This project measures and reports water flow remotely with options for leak detection and flow control. It was designed with home use in mind the encourage people to make more informed decisions about water usage. This software package is designed to run on a host machine along with a Raspberry Pi with some connected peripherals.
 
-## Setup
-### Dependencies
+# Setup
+## Dependencies
 
 Devices you will need:
 - Host: server or personal computer, needs to be able to run python 3.
 - Raspberry Pi: with a sensible OS (I recommend [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) - to run python 3)
 
-##### Software
+#### Software
 
 I have been using [pipenv](https://github.com/pypa/pipenv) to manage my python environment and dependencies. It's a great tool but like most things, it has it's shortcomings... So, I have also included multiple `requirements.txt` files so you can choose how you install your dependencies. [pyenv](https://github.com/pyenv/pyenv) and [virtualenv](https://virtualenv.pypa.io/en/latest/) are some other options to look into, use whatever combination of tools you are comfortable with.
 
@@ -27,7 +25,7 @@ BTW: you will need `python 3.5` (any subversion) to be installed on both machine
 The communication between the two machines is achieved over the [MQTT protocol](https://mqtt.org/faq) you will need an MQTT Broker, if you are familiar with one (or don't wish to host one yourself) go ahead and change the broker address in `server/app.py` and `reporter/main.py` to your brokers address and you are good to go.
 If you don't already have one set up, I have been using [Mosquitto](https://mosquitto.org/), go ahead and install that on your host, start it and change those same values accordingly.
 
-### Start the services
+## Start the services
 Check list:
 - Start MQTT Broker
 - On your host: from the `server/` directory, run `FLASK_APP=app.py  python -m flask run --host 0.0.0.0`
@@ -42,7 +40,7 @@ If you see something like this, you are good to go!
 
 If you are hosting this outside your of local network [here](http://flask.pocoo.org/docs/1.0/deploying/) are some great resources on deploying a flask app. The flask app lives in the `server/` directory so that is what you will be deploying if you choose to.
 
-### Hardware Configuration
+## Hardware Configuration
 
 You are free to use whatever hardware you like depending on your needs. 
 Bare necessities:
@@ -64,24 +62,24 @@ The main things to note are the GPIO pins used for interacting with your compone
   - You may need to change the calculation depending on what sensor you use, change the frequency modifier in `reporter/reader.py`. 
 
 ``` python
-# change this to suit your sensor
-self.water_total += 1.0 / 5880.0 # in L, (5880 pulses = 1L)
+ change this to suit your sensor
+self.water_total += 1.0 / 5880.0  in L, (5880 pulses = 1L)
 
 ```
 
 Here is what my setup looks like, for your reference.
 ![](assets/hardware.jpg)
-## Further Development
-### Updating the remote device
+# Further Development
+## Updating the remote device
 You may need to tweak some of the code to get it working how you like. I have made a simple script to copy the host version of the repo to your remote device (Raspberry Pi) so you can edit the code on your host machine, and sync it with the other easily.
 
 Set the variables in the `update-device` script according to your setup and run it to update the remote device, it will drop you into a prompt where you can run the up-to-date program.
 
-### Contribution
+## Contribution
 Feel free to fork or submit pull requests in this repo, create an issue if you have problems or general questions.
 
 If you are extra excited, here is my TODO list. If you want to contribute one to one of these features, create and issue so we can keep in sync.
 
-#### TODO:
+### TODO:
 - Add scheduling system to leak threshold, incorporate time of day into leak detection to make it more accurate.
 - Add proper time controls to reporting on the dashboard.
