@@ -94,7 +94,7 @@
                         $('#flow-rate-form').submit(function () {
                             $('#flow-rate-submit').addClass("is-loading")
                             $(this).ajaxSubmit((res) => {
-                                $('#flow-rate-submit').removeClass("is-loading")
+                                $('#flow-rate-submit').removeClass("is-loading");
                                 $('#read-rate-message').show(1).delay(2000).hide('slow', () => $(this).resetForm());
                             });
                             return false;
@@ -120,9 +120,10 @@
                     <span class="is-size-6 success" id="leak-threshold-message" hidden>Saved!</span>
                     <script>
                         $('#leak-threshold-form').submit(function () {
-                            $('#leak-threshold-submit').addClass("is-loading")
+                            $('#leak-threshold-submit').addClass("is-loading");
                             $(this).ajaxSubmit((res) => {
-                                $('#leak-threshold-submit').removeClass("is-loading")
+                                $('#leak-threshold-submit').removeClass("is-loading");
+                                window.location.reload();
                                 $('#leak-threshold-message').show(1).delay(2000).hide('slow', () => $(this).resetForm());
                             });
                             return false;
@@ -193,7 +194,7 @@
                         showline: false
                     }
                 };
-                console.table(leak_plot)
+                console.table(leak_plot);
                 Plotly.newPlot('leak-graph', leak_plot, leak_layout);
             </script>
         </div>

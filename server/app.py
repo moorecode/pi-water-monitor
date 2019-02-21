@@ -10,7 +10,7 @@ db = TinyDB('db.json')
 flow_rates = db.table('flow-rate')
 status=db.table('status')
 
-app.config['MQTT_BROKER_URL'] = '10.0.0.7'
+app.config['MQTT_BROKER_URL'] = '127.0.0.1'
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_KEEPALIVE'] = 5
 app.config['MQTT_TLS_ENABLED'] = False
@@ -34,7 +34,7 @@ def dashboard():
     records = flow_rates.all()
     leak_threshold = status.get(where('name') == 'leak_threshold')
     if leak_threshold:
-        leak_threshold = float(leak_threshold.get("value", 9999999))
+        leak_threshold = float(leak_threshold.get("value", 9999999) or 9999999)
     else: leak_threshold = 9999999
     water_cost_per_l = 2.60/1000 # https://www.teampoly.com.au/2018/06/15/water-prices-in-australia/ (Canberra low)
     data = {}

@@ -38,7 +38,7 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("10.0.0.7", 1883, 60)
+client.connect("192.168.1.6", 1883, 60)
 
 def on_read(name, value):
     client.publish("water-monitor/"+ name + "/flow-rate", payload=value, qos=2, retain=False)
