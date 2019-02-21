@@ -1,5 +1,7 @@
 # pi-water-monitor
 
+![](assets/cover.png)
+
 This project measures and reports water flow remotely with options for leak detection and flow control. It was designed with home use in mind the encourage people to make more informed decisions about water usage. This software package is designed to run on a host machine along with a Raspberry Pi with some connected peripherals.
 
 ## Setup
@@ -83,4 +85,3 @@ If you are extra excited, here is my TODO list. If you want to contribute one to
 #### TODO:
 - Add scheduling system to leak threshold, incorporate time of day into leak detection to make it more accurate.
 - Add proper time controls to reporting on the dashboard.
-- 
